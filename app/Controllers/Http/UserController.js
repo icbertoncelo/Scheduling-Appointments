@@ -13,12 +13,7 @@ class UserController {
   }
 
   async update ({ request, response, auth: { user } }) {
-    const data = request.only([
-      'username',
-      'old_password',
-      'new_password',
-      'new_password_confirmation'
-    ])
+    const data = request.only(['username', 'old_password', 'new_password'])
 
     if (data.old_password) {
       const isSame = await Hash.verify(data.old_password, user.password)
@@ -32,12 +27,6 @@ class UserController {
       if (!data.new_password) {
         return response.status(401).send({
           error: { message: 'New password is required' }
-        })
-      }
-
-      if (data.new_password !== data.new_password_confirmation) {
-        return response.status(401).send({
-          error: { message: 'Passwords do not match' }
         })
       }
 
